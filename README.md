@@ -38,21 +38,21 @@ To get started you simply create an instance of the BluetoothManager.
 ```
 Connect/Disconnect a device:
 ```dart
-connectDevice(BluetoothDevice device);
-disconnectDevice(BluetoothDevice device);
+bluetoothManager.connectDevice(BluetoothDevice device);
+bluetoothManager.disconnectDevice(BluetoothDevice device);
 ```
 Check device ConnectionState. A common problem is, if you accidently lose connection to a device it can lead to an exeption. With this function you constantly check the device connectionState for all connected devices and if it loses a connection the device will be disconnected and removed from the DeviceModel leading to no exeptions or potential errors.
 
 ```dart
-checkDeviceConnection();
+bluetoothManager.checkDeviceConnection();
 ```
 To retrieve a Characteristic for subscribing to a stream or writing message you can perform this by calling `getCharacteristic`. Since there can be multiple Characteristics per Service you can choose it by Number.
 ```dart
-getCharacteristic(BluetoothDevice device, int characteristicNumber);
+bluetoothManager.getCharacteristic(BluetoothDevice device, int characteristicNumber);
 ```
 Subscribe to a Stream. It will return a List<int>.
 ```dart
-subscribeToStream(BluetoothCharacteristic? characteristic);
+bluetoothManager.openStream(BluetoothCharacteristic? characteristic);
 ```
 
 ## Additional information
