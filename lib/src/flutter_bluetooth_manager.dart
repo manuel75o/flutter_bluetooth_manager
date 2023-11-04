@@ -4,6 +4,7 @@
 
 // BluetoothManager's aim is to handle multiple devices and their Streams
 
+import 'dart:async';
 import 'dart:convert';
 
 import 'package:flutter_blue_plus/flutter_blue_plus.dart';
@@ -29,6 +30,8 @@ class CharacteristicStream {
 
 /// BluetoothManager's aim is to handle multiple devices and their Streams
 class BluetoothManager {
+  Map<int, StreamController<List<int>>> streamControllers = {};
+
   final deviceModel = <DeviceModel>[];
   int deviceCount = 0;
 
@@ -122,7 +125,7 @@ class BluetoothManager {
     return characteristic;
   }
 
-  /// "Subscribes" to the Characteristics Stream
+  /// "Opens" to the Characteristics Stream -> Only for testing the Flow of Values of the Characteristic
   /// emitts a "Stream" of List<int> (doesn't emitt Stream<List<int>>)!
   /// Set notify value only if it's not already notifying
   Stream<List<int>> openStream(BluetoothCharacteristic? characteristic) async* {
@@ -135,10 +138,47 @@ class BluetoothManager {
       await characteristic.read();
     }
 
-    await for (var data in characteristic.lastValueStream) {
+    await for (var data in characteristic.lastValueStream.asBroadcastStream()) {
       //print("Yielding Data: $data");
       yield data;
     }
+  }
+
+  /// streamHandler is resposible for handling multiple Streams
+  /// Provide the streamHandler an index of the device and it does the rest
+  void streamHandler(int key, Stream<List<int>> stream) {
+    if (!streamControllers.containsKey(key)) {
+      streamControllers[key] = StreamController<List<int>>.broadcast();
+    }
+
+    StreamController<List<int>> controller = streamControllers[key]!;
+
+    stream.listen(
+      (data) {
+        // If the controller is closed don't add streams
+        if (!controller.isClosed) {
+          controller.add(data);
+        }
+      },
+      onError: (error) {
+        controller.addError(error);
+      },
+      onDone: () {
+        controller.close();
+      },
+      cancelOnError: true,
+    );
+  }
+
+  /// By calling getStream and the index of the device you receive a stream for the StreamBuilder
+  Stream<List<int>>? getStream(int key) {
+    return streamControllers[key]?.stream;
+  }
+
+  // If the stream is no longer needed close it by the index
+  void closeStream(int key) {
+    streamControllers[key]?.close();
+    streamControllers.remove(key);
   }
 
   /// UTF8-Decodes the received Data and returns it (for ESP32)

@@ -196,44 +196,37 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
                         )
                       : (const Text("No Device"))),*/
               Padding(
-                  padding: const EdgeInsetsDirectional.fromSTEB(16, 0, 16, 0),
+                padding: const EdgeInsets.all(16.0),
+                child: SizedBox(
+                  height: 150,
                   child: deviceModels.isNotEmpty
-                      ? SizedBox(
-                          height: 200,
-                          child: ListView.builder(
-                            itemCount: stream.length,
-                            itemBuilder: (BuildContext context, int index) {
-                              if (!isInitializedList[index]) {
-                                return Text("No Stream in Index $index");
-                              }
-                              if (index >= stream.length ||
-                                  index >= isInitializedList.length) {
-                                return Text("Index out of bounds: $index");
-                              }
-
-                              return StreamBuilder<List<int>>(
-                                stream: stream[index],
-                                builder: (context, snapshot) {
-                                  if (snapshot.hasData) {
-                                    var currentValue = BluetoothManager()
-                                        .dataParser(snapshot.data!);
-                                    return Text(
-                                      currentValue.toString(),
-                                      textAlign: TextAlign.center,
-                                    );
-                                  }
-
-                                  if (snapshot.hasError) {
-                                    return Text('Error: ${snapshot.error}');
-                                  }
-
-                                  return const Text('Loading');
-                                },
-                              );
-                            },
-                          ),
+                      ? ListView.builder(
+                          itemCount: isInitializedList.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            return StreamBuilder<List<int>>(
+                              stream: bluetoothManager.getStream(
+                                  index), // Use the controlled stream
+                              builder: (context, snapshot) {
+                                if (snapshot.connectionState ==
+                                        ConnectionState.active &&
+                                    snapshot.hasData) {
+                                  return Text(bluetoothManager
+                                      .dataParser(snapshot.data!)
+                                      .toString());
+                                } else if (snapshot.hasError) {
+                                  return Text('Error: ${snapshot.error}');
+                                } else {
+                                  return const Center(
+                                      child: Text("No stream initialized!"));
+                                }
+                              },
+                            );
+                          },
                         )
-                      : const Text("No Stream")),
+                      : const Center(child: Text("No Device connected!")),
+                ),
+              ),
+
               Padding(
                 padding: const EdgeInsets.all(16),
                 child: Flex(
@@ -522,11 +515,12 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
           ),
         ),
         onPressed: () {
-          final streamTemp = bluetoothManager
-              .openStream(bluetoothManager.getCharacteristic(device, 1));
-          print("Stream pressed");
-          stream.add(streamTemp);
-          print(stream);
+          // Open stream for a device with a given index
+          bluetoothManager.streamHandler(
+              index,
+              bluetoothManager
+                  .openStream(bluetoothManager.getCharacteristic(device, 1)));
+          // Initialize the current stream of it's device
           bluetoothManager
               .deviceModel[index].characteristicsStream[1].isInitialized = true;
         },
@@ -554,7 +548,9 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
           ),
         ),
         onPressed: () {
-          stream.removeAt(index);
+          // Close stream for a device with a given index
+          bluetoothManager.closeStream(index);
+
           bluetoothManager.deviceModel[index].characteristicsStream[1]
               .isInitialized = false;
         },

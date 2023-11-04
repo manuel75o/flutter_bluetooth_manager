@@ -1,6 +1,6 @@
 name: flutter_bluetooth_manager
-description: A new Flutter package project.
-version: 0.0.1
+description: BluetoothManager's aim is to handle multiple devices and their Streams
+version: 0.0.2
 homepage:
 
 environment:
