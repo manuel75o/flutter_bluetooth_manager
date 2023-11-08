@@ -26,9 +26,10 @@ class CharacteristicStream {
 ```
 
 ## Features
-
-TODO: List what your package can do. Maybe include images, gifs, or videos.
-
+![Search for devices](resources/DD05AF0C-8434-43A1-A1D6-C9221B7B93C6_1_105_c.jpeg)
+![Connect multiple devices](resources/B92488A3-63E6-49CD-BEF6-B67395B7D6A2_1_105_c.jpeg)
+![Open single Streams](resources/922BA714-DDB9-4535-AF41-F161573E8046_1_105_c.jpeg)
+![Open multiple Streams](resources/92D4F7DF-A796-4F4E-B6E3-03C89D6646CF_1_105_c.jpeg)
 
 ### Getting Started
 
