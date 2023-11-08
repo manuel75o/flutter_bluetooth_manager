@@ -1,6 +1,6 @@
 The aim of `FlutterBluetoothManager` is to handle multiple devices and their streams with ease. It is built on top of the Flutter Bluetooth Package `FlutterBluePlus`.
 
-## Manager
+## BluetoothManager
 
 The BluetoothManager creates a DeviceModel. This represents the device and it's corresponding Services and Characteristics. A device is unique to a DeviceModel. There can be multiple Services and Characteristics per DeviceModel.
 
@@ -24,8 +24,9 @@ class CharacteristicStream {
   });
 }
 ```
-
 ## Features
+Following pictures shows the example of the BluetoothManager.
+
 <table>
   <tr>
     <td><img alt="Search for devices" src="resources/DD05AF0C-8434-43A1-A1D6-C9221B7B93C6_1_105_c.jpeg" width="125"/></td>
@@ -35,46 +36,50 @@ class CharacteristicStream {
   </tr>
 </table>
 
-### Getting Started
+## Getting Started
 
-To get started you simply create an instance of the BluetoothManager.
+To get started you simply create an instance of the 
+### BluetoothManager:
 ```dart
-  BluetoothManager bluetoothManager = BluetoothManager();
+BluetoothManager bluetoothManager = BluetoothManager();
 ```
-Connect/Disconnect a device:
+### Connect a device:
 ```dart
 bluetoothManager.connectDevice(BluetoothDevice device);
-bluetoothManager.disconnectDevice(BluetoothDevice device);
 ```
-Check device ConnectionState. A common problem is, if you accidently lose connection to a device it can lead to an exeption. With this function you constantly check the device connectionState for all connected devices and if it loses a connection the device will be disconnected and removed from the DeviceModel leading to no exeptions or potential errors.
+### Disconnect a device:
+```dart
+bluetoothManager.disconnectDevice(BluetoothDevice device);
+``````
+
+### Check device ConnectionState:
+A common problem is, if you accidently lose connection to a device it can lead to an exeption. With this function you constantly check the device connectionState for all connected devices and if it loses a connection the device will be disconnected and removed from the DeviceModel preventing exeptions or potential errors.
 
 ```dart
 bluetoothManager.checkDeviceConnection();
 ```
+### Get Characteristic:
 To retrieve a Characteristic for subscribing to a stream or writing message you can perform this by calling `getCharacteristic`. Since there can be multiple Characteristics per Service you can choose it by Number.
 ```dart
 bluetoothManager.getCharacteristic(BluetoothDevice device, int characteristicNumber);
 ```
-
+### StreamHandler
 Open a stream by simply calling the streamHandler. It takes the device index value and a stream as input.
 ```dart
 bluetoothManager.streamHandler(index,bluetoothManager.openStream(BluetoothCharacteristic? characteristic));
 ```
 
+### Retrieve a Stream
 Retrieve a stream for Streambuilder by its device index
 ```dart
 bluetoothManager.getStream(index)
 ```
 
-Close a stream
+### Close a stream
 ```dart
 bluetoothManager.closeStream(index)
 ```
 
 ## Additional information
 
-TODO: Tell users more about the package: where to find more information, how to
-contribute to the package, how to file issues, what response they can expect
-from the package authors, and more.
-
-
+Tested with IOS17.
