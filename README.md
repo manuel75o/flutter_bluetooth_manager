@@ -1,3 +1,10 @@
+[![Chat](https://img.shields.io/discord/634853295160033301.svg?style=flat-square&colorB=758ED3)](https://discord.gg/Yk5Efra)
+
+<div align="center">
+    <img alt="BluetoothManager" src="resources/F215286A-6FEE-432C-870F-BFA739DE9B56_1_201_a.jpeg" height="225"/>
+</div>
+
+
 The aim of `FlutterBluetoothManager` is to handle multiple devices and their streams with ease. It is built on top of the Flutter Bluetooth Package `FlutterBluePlus`.
 
 ## BluetoothManager
