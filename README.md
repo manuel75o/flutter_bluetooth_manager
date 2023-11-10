@@ -70,13 +70,19 @@ To retrieve a Characteristic for subscribing to a stream or writing message you 
 ```dart
 bluetoothManager.getCharacteristic(BluetoothDevice device, int characteristicNumber);
 ```
-### StreamHandler
-Open a stream by simply calling the streamHandler. It takes the device index value and a stream as input.
+
+### Open Stream
+To receive a stream you need to call the `openStream` function. It takes a `characteristic` and returns/yields a `Stream<List<int>>`.
 ```dart
-bluetoothManager.streamHandler(index,bluetoothManager.openStream(BluetoothCharacteristic? characteristic));
+bluetoothManager.openStream(BluetoothCharacteristic? characteristic);
+```
+### StreamHandler
+You can handle multiple streams by simply calling the streamHandler. It takes the device index value and a stream as input. You need to use the stream of `openStream`.
+```dart
+bluetoothManager.streamHandler(index, stream);
 ```
 
-### Retrieve a Stream
+### Get Stream
 Retrieve a stream for Streambuilder by its device index
 ```dart
 bluetoothManager.getStream(index)
