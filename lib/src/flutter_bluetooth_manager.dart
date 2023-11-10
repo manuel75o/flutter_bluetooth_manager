@@ -34,6 +34,7 @@ class BluetoothManager {
 
   final deviceModel = <DeviceModel>[];
   int deviceCount = 0;
+  int streamCount = 0;
 
   /// Connects a Device and checks if the Device is already connected
   /// Check by remoteId if the device is already connected
@@ -125,7 +126,7 @@ class BluetoothManager {
     return characteristic;
   }
 
-  /// "Opens" to the Characteristics Stream -> Only for testing the Flow of Values of the Characteristic
+  /// "Opens" a stream of the Characteristics
   /// emitts a "Stream" of List<int> (doesn't emitt Stream<List<int>>)!
   /// Set notify value only if it's not already notifying
   Stream<List<int>> openStream(BluetoothCharacteristic? characteristic) async* {
@@ -170,6 +171,11 @@ class BluetoothManager {
     );
   }
 
+  int getStreamCount() {
+    streamCount = streamControllers.length;
+    return streamCount;
+  }
+
   /// By calling getStream and the index of the device you receive a stream for the StreamBuilder
   Stream<List<int>>? getStream(int key) {
     return streamControllers[key]?.stream;
@@ -196,7 +202,7 @@ class BluetoothManager {
 
   /// Checks if the device is connected if it loses the connection by accident
   /// it removes the DeviceModel to counteract
-  checkDeviceConnection() {
+  void checkDeviceConnection({bool autoReconnect = false}) {
     for (var dm in deviceModel) {
       final device = dm.device;
       device.connectionState.asBroadcastStream().listen((event) {

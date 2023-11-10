@@ -127,7 +127,8 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
         : false;
     print("is: $isInitialized");*/
 
-    bluetoothManager.getConnectedDeviceCount();
+    print("Device Count ${bluetoothManager.getConnectedDeviceCount()}");
+    print("Stream Count ${bluetoothManager.getStreamCount()}");
     if (bluetoothManager.deviceCount != 0) {
       isInitializedList = deviceModels.isNotEmpty
           ? deviceModels
