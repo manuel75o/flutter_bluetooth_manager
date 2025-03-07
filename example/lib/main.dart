@@ -113,6 +113,8 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
     final connectedDevices = ref.watch(connectedDevicesStreamProvider);
     final isScanning = ref.watch(isScanningStreamProvider);
     final deviceModels = bluetoothManager.getAllDeviceModels();
+    //print("TestValues: ${deviceModels.first.characteristicsStream[1].characteristic}");
+    print("initializedStreams: ${bluetoothManager.initializedStreams}");
 
     // Test for Provider Stream
     /*final characteristic = deviceModels.isNotEmpty
@@ -464,6 +466,9 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
           targetDevice = device;
           print("TARGET DEVICE: $targetDevice");
           bluetoothManager.connectDevice(targetDevice);
+          final charStream = bluetoothManager.getCharStream(device);
+
+          bluetoothManager.initializedStreams[charStream] = false;
         },
         child: const Text(
           'Connect',
@@ -522,8 +527,9 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
               bluetoothManager
                   .openStream(bluetoothManager.getCharacteristic(device, 1)));
           // Initialize the current stream of it's device
-          bluetoothManager
-              .deviceModel[index].characteristicsStream[1].isInitialized = true;
+          final charStream = bluetoothManager.getCharStream(device);
+          bluetoothManager.addStreamInits(charStream);
+          //bluetoothManager.deviceModel[index].characteristicsStream[1].isInitialized = true;
         },
         child: const Text(
           'Open Stream',
@@ -551,9 +557,9 @@ class _MyManagerPageState extends ConsumerState<MyManagerPage> {
         onPressed: () {
           // Close stream for a device with a given index
           bluetoothManager.closeStream(index);
-
-          bluetoothManager.deviceModel[index].characteristicsStream[1]
-              .isInitialized = false;
+          final charStream = bluetoothManager.getCharStream(device);
+          bluetoothManager.removeStreamInits(charStream);
+          //bluetoothManager.deviceModel[index].characteristicsStream[1].isInitialized = false;
         },
         child: const Text(
           'Close Stream',

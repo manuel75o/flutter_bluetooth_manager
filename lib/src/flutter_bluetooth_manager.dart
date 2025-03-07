@@ -31,7 +31,7 @@ class CharacteristicStream {
 /// BluetoothManager's aim is to handle multiple devices and their Streams
 class BluetoothManager {
   Map<int, StreamController<List<int>>> streamControllers = {};
-
+  Map<CharacteristicStream, bool> initializedStreams = {};
   final deviceModel = <DeviceModel>[];
   int deviceCount = 0;
   int streamCount = 0;
@@ -169,6 +169,27 @@ class BluetoothManager {
       },
       cancelOnError: true,
     );
+  }
+
+  getCharStream(BluetoothDevice device) {
+    final dm =
+        deviceModel.firstWhere((deviceModel) => deviceModel.device == device);
+
+    final charStream = dm.characteristicsStream[1];
+
+    return charStream;
+  }
+
+  void addStreamInits(CharacteristicStream charStream) {
+    charStream.isInitialized = true;
+    initializedStreams[charStream] = true;
+    print("Added to map: $initializedStreams"); // Debug print
+  }
+
+  void removeStreamInits(CharacteristicStream charStream) {
+    charStream.isInitialized = false;
+    initializedStreams[charStream] = false;
+    print("Removed from map: $initializedStreams"); // Debug print
   }
 
   int getStreamCount() {
